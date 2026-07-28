@@ -18,27 +18,12 @@
     </nav>
     <div class="account">
       <span id="syncStatus" class="status">기기에 저장됨</span>
-      <button id="loginButton" class="button secondary">로그인</button>
+      <button id="loginButton" class="button secondary">Google 로그인</button>
       <button id="logoutButton" class="button secondary hidden">로그아웃</button>
     </div>
   </header>
 
   <main id="app" class="shell"></main>
-
-  <dialog id="authDialog">
-    <form method="dialog" class="auth-panel">
-      <h2>학습 기록 동기화</h2>
-      <p class="muted">휴대폰과 PC에서 같은 이메일과 비밀번호를 사용하세요.</p>
-      <label>이메일<input id="authEmail" type="email" autocomplete="email" required></label>
-      <label>비밀번호<input id="authPassword" type="password" autocomplete="current-password" minlength="6" required></label>
-      <p id="authMessage" class="muted"></p>
-      <div class="reader-actions">
-        <button id="closeAuth" class="button secondary" type="button">닫기</button>
-        <button id="registerEmail" class="button secondary" type="button">처음 가입</button>
-        <button id="loginEmail" class="button primary" type="button">로그인</button>
-      </div>
-    </form>
-  </dialog>
 
   <template id="todayTemplate">
     <section class="hero">

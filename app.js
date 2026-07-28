@@ -127,6 +127,7 @@ async function initFirebase(){
   const cfg=window.GVOR_FIREBASE_CONFIG;
   if(!cfg){$("#syncStatus").textContent="기기에 저장됨";return}
   firebase.initializeApp(cfg);auth=firebase.auth();db=firebase.firestore();cloudReady=true;
+  await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
   auth.onAuthStateChanged(async u=>{
     user=u; $("#loginButton").classList.toggle("hidden",!!u);$("#logoutButton").classList.toggle("hidden",!u);
@@ -143,29 +144,15 @@ async function pushCloud(){
   if(!user||!db)return;$("#syncStatus").textContent=navigator.onLine?"동기화 중":"오프라인 저장";
   try{await db.collection("users").doc(user.uid).collection("state").doc("main").set(state,{merge:true});$("#syncStatus").textContent="동기화 완료"}catch(e){$("#syncStatus").textContent="오프라인 저장"}
 }
-function authErrorMessage(error){
-  const messages={
-    "auth/email-already-in-use":"이미 가입된 이메일입니다. 로그인 버튼을 누르세요.",
-    "auth/invalid-credential":"이메일 또는 비밀번호가 맞지 않습니다.",
-    "auth/invalid-email":"이메일 주소를 확인해 주세요.",
-    "auth/weak-password":"비밀번호는 6자 이상이어야 합니다."
-  };
-  return messages[error?.code]||"로그인할 수 없습니다. 입력 내용을 다시 확인해 주세요.";
-}
-async function emailAuth(mode){
-  const email=$("#authEmail").value.trim(), password=$("#authPassword").value;
-  if(!email||password.length<6){$("#authMessage").textContent="이메일과 6자 이상의 비밀번호를 입력하세요.";return}
-  $("#authMessage").textContent="처리 중...";
+$("#loginButton").onclick=async()=>{
+  if(!auth){alert("Firebase 연결 설정이 아직 완료되지 않았습니다.");return}
   try{
-    if(mode==="register") await auth.createUserWithEmailAndPassword(email,password);
-    else await auth.signInWithEmailAndPassword(email,password);
-    $("#authDialog").close();
-  }catch(error){$("#authMessage").textContent=authErrorMessage(error)}
-}
-$("#loginButton").onclick=()=>auth?$("#authDialog").showModal():alert("Firebase 연결 설정이 아직 완료되지 않았습니다.");
-$("#closeAuth").onclick=()=>$("#authDialog").close();
-$("#loginEmail").onclick=()=>emailAuth("login");
-$("#registerEmail").onclick=()=>emailAuth("register");
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }catch(error){
+    if(error?.code!=="auth/popup-closed-by-user") alert("Google 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+  }
+};
 $("#logoutButton").onclick=()=>auth.signOut();
 window.addEventListener("hashchange",route);window.addEventListener("online",()=>pushCloud());
 initFirebase();route();
