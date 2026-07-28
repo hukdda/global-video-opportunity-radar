@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f6f1e7">
+  <title>Global Video Opportunity Radar</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#today">GVOR</a>
+    <nav>
+      <a href="#today">오늘</a>
+      <a href="#library">책장</a>
+      <a href="#growth">성장</a>
+    </nav>
+    <div class="account">
+      <span id="syncStatus" class="status">기기에 저장됨</span>
+      <button id="loginButton" class="button secondary">Google 로그인</button>
+      <button id="logoutButton" class="button secondary hidden">로그아웃</button>
+    </div>
+  </header>
+
+  <main id="app" class="shell"></main>
+
+  <template id="todayTemplate">
+    <section class="hero">
+      <p class="eyebrow">오늘의 한 편</p>
+      <h1 id="lessonTitle"></h1>
+      <p id="lessonGoal" class="lead"></p>
+      <div class="progress"><span id="progressBar"></span></div>
+      <p id="progressText" class="muted"></p>
+      <button id="startLesson" class="button primary">오늘 수업 시작</button>
+    </section>
+    <section class="card compact">
+      <p class="eyebrow">오늘의 행동</p>
+      <p>개념 배우기 → 영상 보기 → 스스로 찾기 → 해설 → 확인 → 한 줄 적용</p>
+    </section>
+  </template>
+
+  <template id="lessonTemplate">
+    <article class="reader">
+      <p id="pageLabel" class="eyebrow"></p>
+      <div id="lessonPage"></div>
+      <div class="reader-actions">
+        <button id="prevPage" class="button secondary">이전</button>
+        <button id="nextPage" class="button primary">다음</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

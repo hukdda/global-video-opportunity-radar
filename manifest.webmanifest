@@ -1,0 +1,9 @@
+{
+  "name":"Global Video Opportunity Radar",
+  "short_name":"GVOR",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#f6f1e7",
+  "theme_color":"#f6f1e7",
+  "icons":[]
+}
