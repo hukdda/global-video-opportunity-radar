@@ -16,7 +16,13 @@ h1,h2{line-height:1.26;margin:.25em 0 .65em}h1{font-size:clamp(31px,6vw,52px)}h2
 .lead{font-size:20px;color:#44504b}.muted{color:var(--muted)}
 .button{border:0;border-radius:999px;padding:12px 18px;font:700 14px system-ui;cursor:pointer}
 .primary{background:var(--green);color:white}.secondary{background:#e9e2d7;color:var(--ink)}
-.hidden{display:none!important}.progress{height:8px;background:#e3ddd2;border-radius:99px;overflow:hidden;margin:30px 0 8px}
+.hidden{display:none!important}
+dialog{border:0;border-radius:24px;box-shadow:0 24px 80px #302a2050;max-width:520px;width:calc(100% - 32px);padding:0}
+dialog::backdrop{background:#302a2070}
+.auth-panel{padding:28px}
+.auth-panel label{display:grid;gap:7px;margin:16px 0;font-weight:700}
+.auth-panel input{border:1px solid #cfc6b8;border-radius:12px;font:inherit;padding:12px 14px}
+.progress{height:8px;background:#e3ddd2;border-radius:99px;overflow:hidden;margin:30px 0 8px}
 .progress span{display:block;height:100%;background:var(--accent);width:0}
 .reader{min-height:620px}.reader-actions{display:flex;justify-content:space-between;margin-top:42px}
 .example{padding:18px 20px;border-left:4px solid var(--accent);background:#f2eadf;margin:18px 0}
