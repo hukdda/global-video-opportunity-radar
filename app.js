@@ -151,12 +151,24 @@ async function pushCloud(){
 $("#loginButton").onclick=async()=>{
   if(!auth){alert("Firebase 연결 설정이 아직 완료되지 않았습니다.");return}
   try{
-    $("#syncStatus").textContent="Google 로그인 이동 중";
+    $("#syncStatus").textContent="Google 로그인 중";
     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+    const provider=new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({prompt:"select_account"});
+    await auth.signInWithPopup(provider);
   }catch(error){
+    console.error("Google popup sign-in failed",error);
+    if(["auth/popup-blocked","auth/operation-not-supported-in-this-environment"].includes(error.code)){
+      try{
+        $("#syncStatus").textContent="Google 로그인 이동 중";
+        await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+        return;
+      }catch(redirectError){
+        console.error("Google redirect fallback failed",redirectError);
+      }
+    }
     $("#syncStatus").textContent="로그인 실패";
-    alert("Google 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+    alert(`Google 로그인에 실패했습니다.\n${error.code||"알 수 없는 오류"}`);
   }
 };
 $("#logoutButton").onclick=()=>auth.signOut();
