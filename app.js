@@ -129,6 +129,10 @@ async function initFirebase(){
   firebase.initializeApp(cfg);auth=firebase.auth();db=firebase.firestore();cloudReady=true;
   await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+  try{await auth.getRedirectResult()}catch(error){
+    $("#syncStatus").textContent="로그인 실패";
+    console.error("Google redirect sign-in failed",error);
+  }
   auth.onAuthStateChanged(async u=>{
     user=u; $("#loginButton").classList.toggle("hidden",!!u);$("#logoutButton").classList.toggle("hidden",!u);
     if(u){$("#syncStatus").textContent="동기화 중";await pullCloud();$("#syncStatus").textContent="동기화 완료";route()}
@@ -147,10 +151,12 @@ async function pushCloud(){
 $("#loginButton").onclick=async()=>{
   if(!auth){alert("Firebase 연결 설정이 아직 완료되지 않았습니다.");return}
   try{
+    $("#syncStatus").textContent="Google 로그인 이동 중";
     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
   }catch(error){
-    if(error?.code!=="auth/popup-closed-by-user") alert("Google 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+    $("#syncStatus").textContent="로그인 실패";
+    alert("Google 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.");
   }
 };
 $("#logoutButton").onclick=()=>auth.signOut();
